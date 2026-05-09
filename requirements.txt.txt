@@ -1,0 +1,10 @@
+numpy
+scikit-learn
+matplotlib
+tkinter
+random
+math
+heapq
+collections
+threading
+re
