@@ -3,6 +3,10 @@
 AIDRA is an AI-based disaster response simulation system designed to assist rescue operations during hazardous situations such as earthquakes and blocked-road emergencies. The project intelligently identifies optimal rescue paths, prioritizes victims based on severity, and manages limited rescue resources efficiently.
 
 ---
+## Project Demonstration Video
+
+[Watch the Simulation Video on LinkedIn](https://www.linkedin.com/posts/abdullah-khan-29bb392bb_ai-python-machinelearning-ugcPost-7458852940632547328-36TQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEzgZVcBu2AkQj_vGbTBn3ZREOKZmkb60Zs)
+---
 
 ## Features
 
