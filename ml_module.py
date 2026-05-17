@@ -53,9 +53,9 @@ from environment import SEVERITY_SCORE
 #  SYNTHETIC DATA GENERATION
 # ─────────────────────────────────────────────────────────────
 
-def generate_training_data(n=400, seed=42):
+def generate_training_data(n=500, seed=42):
     """
-    Generate *n* labelled training examples.
+    Generate *n* labelled training examples (default 500).
 
     Survival heuristic (domain knowledge encoded):
       score = (severity * 10)
@@ -107,7 +107,7 @@ class MLModule:
         Generate synthetic data, split 80/20, train both models,
         and compute all required evaluation metrics.
         """
-        X, y = generate_training_data(n=400)
+        X, y = generate_training_data(n=500)
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42, stratify=y
         )

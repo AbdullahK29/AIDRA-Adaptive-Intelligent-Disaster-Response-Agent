@@ -54,3 +54,50 @@ fuzzy.py
 csp.py
 gui.py
 ```
+
+Install required libraries:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Required Libraries
+
+### External Libraries
+
+* numpy
+* scikit-learn
+* matplotlib
+
+### Built-in Python Libraries
+
+* tkinter
+* random
+* math
+* heapq
+* collections
+* threading
+* re
+
+---
+
+## Run the Project
+
+```bash
+python main.py
+```
+
+---
+
+## Objective
+
+The objective of this project is to simulate intelligent disaster management using Artificial Intelligence techniques for efficient rescue operations under limited resources and dangerous conditions.
+
+---
+
+## Authors
+
+* Abdullah Khan
+* Usman Nazir

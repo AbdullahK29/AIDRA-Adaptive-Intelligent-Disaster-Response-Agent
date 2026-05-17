@@ -264,7 +264,7 @@ class AIDRAAgent:
                       if csp_assignment else 0)
 
             # ── Plan risky path using SELECTED ALGORITHM ──────
-            #    (THIS IS THE FIX — was hardcoded to astar before)
+            
             path_risky, exp_risky = self.plan_route(
                 start, goal, strategy=strategy, safe_only=False
             )
@@ -301,9 +301,19 @@ class AIDRAAgent:
                 self.log(f"  !! Replanning failed for Victim {v['id']} — skipping", "ERR")
                 continue
 
-            # ── Compute outcome ───────────────────────────────
-            rescue_time = len(chosen_path)
-            risk_exp    = risk_steps_in_path(self.grid, chosen_path)
+                        # ── After reaching victim, go to nearest medical center ─────────
+            med_pos, med_path = self.find_best_medical(goal, strategy=strategy)
+            if med_path is None:
+                self.log(f"  !! No route to hospital for Victim {v['id']} — skipping", "ERR")
+                continue
+
+            # Full trip path: BASE → victim → hospital
+            # (drop duplicate victim node in the join)
+            full_path = chosen_path + med_path[1:]
+
+            # ── Compute outcome ────────────────────────────────────────────
+            rescue_time = len(full_path)
+            risk_exp    = risk_steps_in_path(self.grid, full_path)
             surv_prob   = self.ml.predict_survival(
                 v["severity"], risk_exp, rescue_time,
                 kits=min(self.resources["kits"], 3)
@@ -317,7 +327,7 @@ class AIDRAAgent:
             result = {
                 "victim_id":  v["id"],
                 "severity":   v["severity"],
-                "path":       chosen_path,
+                "path":       full_path,   # GUI animates full trip
                 "mode":       chosen_mode,
                 "tradeoff":   tradeoff_reason,
                 "time":       rescue_time,
@@ -328,6 +338,7 @@ class AIDRAAgent:
                 "algo":       strategy,
                 "nodes_exp_risky": exp_risky,
                 "nodes_exp_safe":  exp_safe,
+                "hospital":   med_pos,
             }
             path_results.append(result)
 
@@ -340,13 +351,15 @@ class AIDRAAgent:
             })
 
             self.log(
-                f"  ✓ Victim {v['id']} rescued via Ambulance {amb_id+1}"
+                f"  ✓ Victim {v['id']} delivered to hospital via Ambulance {amb_id+1}"
                 f" | Mode={chosen_mode} | PathLen={rescue_time}"
                 f" | RiskSteps={risk_exp} | Survival={surv_prob:.2f}"
                 + (" [REPLANNED]" if replanned else ""),
                 "RESCUE"
             )
-            self.log(f"    Tradeoff reason: {tradeoff_reason}", "RESCUE")
+            self.log(f"    Hospital: {med_pos} | Tradeoff reason: {tradeoff_reason}", "RESCUE")
+
+ 
 
         # ── Step 6: KPI computation ───────────────────────────
         self._compute_kpis(priorities, victims_saved, total_rescue_time,
